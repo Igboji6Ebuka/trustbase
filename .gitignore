@@ -1,0 +1,25 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+
+# Database (Railway will create a fresh one)
+server/trustbase.db
+server/trustbase.db-shm
+server/trustbase.db-wal
+
+# Uploaded files
+server/uploads/*
+!server/uploads/.gitkeep
+
+# Environment
+.env
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
