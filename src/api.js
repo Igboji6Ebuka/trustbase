@@ -1,10 +1,10 @@
-/**
+﻿/**
  * TrustBase API Client
  * Centralized fetch wrapper that automatically attaches the JWT
  * from localStorage to every request.
  */
 
-const RAILWAY_BACKEND_URL = 'https://trustbase-production-32b1.up.railway.app';
+const RAILWAY_BACKEND_URL = 'https://trustbase-production-687f.up.railway.app';
 const BASE_URL = import.meta.env.VITE_API_URL || 
   (typeof window !== 'undefined' && window.location.hostname === 'localhost' && window.location.port === '5173' 
     ? '/api' 
@@ -38,7 +38,7 @@ async function request(method, path, body = null, isFormData = false) {
 }
 
 const api = {
-  // ── Auth ───────────────────────────────────────────────────────────────
+  // â”€â”€ Auth â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   signup: (name, phone, password) =>
     request('POST', '/auth/signup', { name, phone, password }),
 
@@ -48,7 +48,7 @@ const api = {
   me: () =>
     request('GET', '/auth/me'),
 
-  // ── Reports ────────────────────────────────────────────────────────────
+  // â”€â”€ Reports â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   getReports: (page = 1, limit = 20) =>
     request('GET', `/reports?page=${page}&limit=${limit}`),
 
@@ -61,18 +61,18 @@ const api = {
   submitReport: (formData) =>
     request('POST', '/reports', formData, true),
 
-  // ── Search ────────────────────────────────────────────────────────────
+  // â”€â”€ Search â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   search: (q) =>
     request('GET', `/search?q=${encodeURIComponent(q)}`),
 
-  // ── Verifications ──────────────────────────────────────────────────────
+  // â”€â”€ Verifications â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   getVerificationStatus: () =>
     request('GET', '/verifications/status'),
 
   applyForVerification: (formData) =>
     request('POST', '/verifications/apply', formData, true),
 
-  // ── Notifications ──────────────────────────────────────────────────────
+  // â”€â”€ Notifications â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   getNotifications: () =>
     request('GET', '/notifications'),
 
@@ -82,7 +82,7 @@ const api = {
   markAllNotificationsRead: () =>
     request('PATCH', '/notifications/read-all'),
 
-  // ── Admin ──────────────────────────────────────────────────────────────
+  // â”€â”€ Admin â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   adminStats: () =>
     request('GET', '/admin/stats'),
 
@@ -111,7 +111,7 @@ const api = {
     request('GET', '/admin/flagged'),
 };
 
-// ── Session helpers ────────────────────────────────────────────────────────
+// â”€â”€ Session helpers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 export function saveSession(token, user) {
   localStorage.setItem('tb_token', token);
@@ -132,3 +132,4 @@ export function getStoredUser() {
 }
 
 export default api;
+
