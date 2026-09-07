@@ -104,7 +104,7 @@ export default function AdminVerifications({ onLogout }) {
                     <span style={{ fontSize: '12px', color: '#8B9099' }}>👤 {v.applicant_name} · {v.applicant_phone}</span>
                     <span style={{ fontSize: '12px', color: '#8B9099' }}>🏷️ {v.entity_type} · {v.id_type}: {v.id_number}</span>
                     <span style={{ fontSize: '12px', color: '#8B9099' }}>📅 {new Date(v.submitted_at).toLocaleDateString()}</span>
-                    <span style={{ fontSize: '12px', fontWeight: '700', color: '#388E3C' }}>Fee: {v.entity_type === 'business' ? '₦5,000' : '₦2,000'}</span>
+                    <span style={{ fontSize: '12px', fontWeight: '700', color: '#388E3C' }}>Fee: FREE</span>
                   </div>
                 </div>
 

@@ -192,7 +192,7 @@ export default function Profile() {
           </div>
           <div style={{ flex: 1 }}>
             <p style={{ color: 'white', fontWeight: '800', fontSize: '15px', margin: '0 0 4px 0' }}>Get Verified</p>
-            <p style={{ color: 'rgba(255,255,255,0.8)', fontSize: '12px', margin: 0 }}>Add a verified badge to your profile — from ₦2,000</p>
+            <p style={{ color: 'rgba(255,255,255,0.85)', fontSize: '12px', margin: 0 }}>Add a verified badge to your profile — 100% Free</p>
           </div>
           <div style={{ background: 'rgba(255,255,255,0.2)', borderRadius: '10px', padding: '8px', flexShrink: 0 }}>
             <Star size={18} color="white" fill="white" />

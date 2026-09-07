@@ -191,8 +191,8 @@ export default function More() {
           <ShieldCheck size={28} color="white" />
           <div style={{ flex: 1 }}>
             <p style={{ color: 'white', fontWeight: '700', fontSize: '14px', margin: 0 }}>Get Verified Today</p>
-            <p style={{ color: 'rgba(255,255,255,0.75)', fontSize: '12px', margin: 0 }}>
-              Build trust from just ₦2,000
+            <p style={{ color: 'rgba(255,255,255,0.85)', fontSize: '12px', margin: 0 }}>
+              Build trust for free — 100% Free verification
             </p>
           </div>
           <ChevronRight size={20} color="rgba(255,255,255,0.7)" />

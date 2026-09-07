@@ -4,7 +4,11 @@
  * from localStorage to every request.
  */
 
-const BASE_URL = '/api';
+const RAILWAY_BACKEND_URL = 'https://trustbase-production-32b1.up.railway.app';
+const BASE_URL = import.meta.env.VITE_API_URL || 
+  (typeof window !== 'undefined' && window.location.hostname === 'localhost' && window.location.port === '5173' 
+    ? '/api' 
+    : `${RAILWAY_BACKEND_URL}/api`);
 
 function getToken() {
   return localStorage.getItem('tb_token');

@@ -165,7 +165,7 @@ export default function AdminDashboard({ onLogout }) {
                           <p style={{ margin: 0, fontSize: '14px', fontWeight: '600', color: '#1A1F2E' }}>{v.entity_name}</p>
                           <p style={{ margin: '2px 0 0', fontSize: '12px', color: '#8B9099' }}>{v.entity_type} · {v.applicant_name}</p>
                         </div>
-                        <span style={{ fontSize: '13px', fontWeight: '700', color: '#388E3C' }}>{v.entity_type === 'business' ? '₦5,000' : '₦2,000'}</span>
+                        <span style={{ fontSize: '13px', fontWeight: '700', color: '#388E3C' }}>FREE</span>
                       </div>
                       <div style={{ display: 'flex', gap: '8px' }}>
                         <button onClick={() => handleVerifAction(v.id, 'approved')} style={{ flex: 1, backgroundColor: '#E8F5E9', color: '#388E3C', border: 'none', borderRadius: '6px', padding: '7px', fontSize: '12px', fontWeight: '600', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px' }}>

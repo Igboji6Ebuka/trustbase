@@ -13,7 +13,7 @@ export default function GetVerified() {
 
   const plans = {
     individual: {
-      price: '₦2,000',
+      price: 'FREE',
       title: 'Individual Verification',
       subtitle: 'For freelancers & individuals',
       features: [
@@ -21,13 +21,13 @@ export default function GetVerified() {
         'Verified badge on your profile',
         'Priority in search results',
         'Monthly trust report',
-        '30-day money back guarantee',
+        '100% Free - No charges',
       ],
       color: '#E53935',
       gradient: 'linear-gradient(135deg, #E53935, #C62828)',
     },
     business: {
-      price: '₦5,000',
+      price: 'FREE',
       title: 'Business Verification',
       subtitle: 'For businesses & vendors',
       features: [
@@ -36,7 +36,7 @@ export default function GetVerified() {
         'Verified badge & trust seal',
         'Priority in search results',
         'Quarterly trust audit',
-        'Scam protection certificate',
+        '100% Free - No charges',
       ],
       color: '#1565C0',
       gradient: 'linear-gradient(135deg, #1565C0, #0D47A1)',
@@ -212,7 +212,7 @@ export default function GetVerified() {
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px' }}>
               <User size={22} color={type === 'individual' ? '#E53935' : '#8896A5'} />
               <span style={{ fontSize: '13px', fontWeight: '700', color: type === 'individual' ? '#E53935' : '#8896A5' }}>Individual</span>
-              <span style={{ fontSize: '10px', color: '#B0BEC5' }}>₦2,000</span>
+              <span style={{ fontSize: '10px', color: '#00C853', fontWeight: '700' }}>FREE</span>
             </div>
           </button>
           <button
@@ -228,7 +228,7 @@ export default function GetVerified() {
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px' }}>
               <Briefcase size={22} color={type === 'business' ? '#1565C0' : '#8896A5'} />
               <span style={{ fontSize: '13px', fontWeight: '700', color: type === 'business' ? '#1565C0' : '#8896A5' }}>Business</span>
-              <span style={{ fontSize: '10px', color: '#B0BEC5' }}>₦5,000</span>
+              <span style={{ fontSize: '10px', color: '#00C853', fontWeight: '700' }}>FREE</span>
             </div>
           </button>
         </div>
