@@ -20,6 +20,7 @@ import Profile from './pages/Profile';
 import More from './pages/More';
 import PrivacySettings from './pages/PrivacySettings';
 import PrivacySecurity from './pages/PrivacySecurity';
+import FAQ from './pages/FAQ';
 
 // Admin Pages
 import AdminLogin from './admin/AdminLogin';
@@ -94,6 +95,7 @@ function App() {
         <Route path="/privacy-settings" element={isAuthenticated ? <><PrivacySettings /><BottomNav /></> : <Navigate to="/signup" />} />
         <Route path="/privacy-security" element={isAuthenticated ? <><PrivacySecurity /><BottomNav /></> : <Navigate to="/signup" />} />
         <Route path="/more" element={isAuthenticated ? <><More user={user} onLogout={handleLogout} /><BottomNav /></> : <Navigate to="/signup" />} />
+        <Route path="/faq" element={<><FAQ />{isAuthenticated && <BottomNav />}</>} />
 
         {/* Default */}
         <Route path="/" element={<Navigate to={isAuthenticated ? '/home' : '/signup'} />} />

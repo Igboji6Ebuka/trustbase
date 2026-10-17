@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">TrustBase</string>
+    <string name="title_activity_main">TrustBase</string>
+    <string name="package_name">ng.trustbase.app</string>
+    <string name="custom_url_scheme">ng.trustbase.app</string>
+</resources>

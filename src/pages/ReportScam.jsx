@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Camera, Phone, Briefcase, AlertCircle, CheckCircle2, Upload, X } from 'lucide-react';
+import { ArrowLeft, Camera, Phone, Briefcase, AlertCircle, CheckCircle2, Upload, X, Image as ImageIcon, Trash2 } from 'lucide-react';
 import api from '../api';
 
 const SCAM_TYPES = [
@@ -22,9 +22,55 @@ export default function ReportScam() {
     description: '', amount: '', evidence: null,
     anonymous: false,
   });
+  const [previewUrl, setPreviewUrl] = useState(null);
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+
+  const galleryInputRef = useRef(null);
+  const cameraInputRef = useRef(null);
+
+  // Clean up object URL when component unmounts or image changes
+  useEffect(() => {
+    return () => {
+      if (previewUrl) URL.revokeObjectURL(previewUrl);
+    };
+  }, [previewUrl]);
+
+  const handleFileChange = (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+      setError('Please select an image file (PNG, JPG, WEBP, etc.)');
+      return;
+    }
+
+    if (file.size > 10 * 1024 * 1024) {
+      setError('Image size exceeds 10MB limit. Please choose a smaller image.');
+      return;
+    }
+
+    setError('');
+    if (previewUrl) URL.revokeObjectURL(previewUrl);
+    setPreviewUrl(URL.createObjectURL(file));
+    setForm(prev => ({ ...prev, evidence: file }));
+  };
+
+  const handleRemoveEvidence = (e) => {
+    e?.stopPropagation();
+    if (previewUrl) URL.revokeObjectURL(previewUrl);
+    setPreviewUrl(null);
+    setForm(prev => ({ ...prev, evidence: null }));
+    if (galleryInputRef.current) galleryInputRef.current.value = '';
+    if (cameraInputRef.current) cameraInputRef.current.value = '';
+  };
+
+  const formatFileSize = (bytes) => {
+    if (!bytes) return '';
+    if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+    return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+  };
 
   const handleNext = () => {
     if (step < 3) setStep(step + 1);
@@ -63,7 +109,8 @@ export default function ReportScam() {
         background: 'white', minHeight: '100vh',
         display: 'flex', flexDirection: 'column',
         alignItems: 'center', justifyContent: 'center',
-        padding: '40px 24px', textAlign: 'center',
+        padding: '40px 24px calc(110px + env(safe-area-inset-bottom, 20px)) 24px',
+        textAlign: 'center',
       }}>
         <div style={{
           width: '100px', height: '100px',
@@ -123,7 +170,12 @@ export default function ReportScam() {
             background: 'none', border: 'none', color: '#E53935',
             fontSize: '14px', fontWeight: '600', cursor: 'pointer', padding: '10px',
           }}
-          onClick={() => { setSubmitted(false); setStep(1); setForm({ phone: '', business: '', scamType: '', description: '', amount: '', evidence: null, anonymous: false }); }}
+          onClick={() => {
+            setSubmitted(false);
+            setStep(1);
+            setPreviewUrl(null);
+            setForm({ phone: '', business: '', scamType: '', description: '', amount: '', evidence: null, anonymous: false });
+          }}
         >
           Submit Another Report
         </button>
@@ -168,7 +220,8 @@ export default function ReportScam() {
       <div style={{
         flex: 1, background: 'white',
         borderRadius: '24px 24px 0 0',
-        marginTop: '-20px', padding: '24px',
+        marginTop: '-20px',
+        padding: '24px 20px calc(120px + env(safe-area-inset-bottom, 20px)) 20px',
         boxShadow: '0 -4px 20px rgba(0,0,0,0.05)',
         position: 'relative', zIndex: 10,
       }}>
@@ -323,44 +376,215 @@ export default function ReportScam() {
             <h2 style={{ fontSize: '18px', fontWeight: '700', color: '#1A2B3C', marginBottom: '6px' }}>Add Evidence</h2>
             <p style={{ fontSize: '13px', color: '#8896A5', marginBottom: '24px' }}>Screenshots or photos help strengthen your report</p>
 
-            {/* Upload Area */}
-            <div style={{
-              border: '2px dashed #E0E4EC',
-              borderRadius: '16px',
-              padding: '32px',
-              textAlign: 'center',
-              background: '#FAFBFC',
-              cursor: 'pointer',
-              marginBottom: '20px',
-              transition: 'all 0.2s ease',
-            }}
-            onMouseEnter={e => { e.currentTarget.style.borderColor = '#E53935'; e.currentTarget.style.background = '#FFF5F5'; }}
-            onMouseLeave={e => { e.currentTarget.style.borderColor = '#E0E4EC'; e.currentTarget.style.background = '#FAFBFC'; }}
-            >
+            {/* Hidden file inputs for Camera and Gallery */}
+            <input
+              type="file"
+              ref={galleryInputRef}
+              accept="image/*"
+              style={{ display: 'none' }}
+              onChange={handleFileChange}
+            />
+            <input
+              type="file"
+              ref={cameraInputRef}
+              accept="image/*"
+              capture="environment"
+              style={{ display: 'none' }}
+              onChange={handleFileChange}
+            />
+
+            {/* Upload Area / Preview */}
+            {previewUrl ? (
               <div style={{
-                width: '60px', height: '60px',
-                background: 'linear-gradient(135deg, #E53935, #C62828)',
                 borderRadius: '16px',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                margin: '0 auto 12px',
+                border: '1.5px solid #C8E6C9',
+                background: '#F1F8E9',
+                padding: '16px',
+                marginBottom: '20px',
+                position: 'relative',
               }}>
-                <Camera size={28} color="white" />
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <div style={{ width: '24px', height: '24px', borderRadius: '50%', background: '#4CAF50', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      <CheckCircle2 size={16} color="white" />
+                    </div>
+                    <span style={{ fontSize: '13px', fontWeight: '700', color: '#2E7D32' }}>
+                      Evidence Attached
+                    </span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={handleRemoveEvidence}
+                    style={{
+                      background: '#FFEBEE',
+                      border: 'none',
+                      borderRadius: '8px',
+                      padding: '6px 10px',
+                      color: '#D32F2F',
+                      fontSize: '12px',
+                      fontWeight: '600',
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '4px',
+                    }}
+                  >
+                    <Trash2 size={13} /> Remove
+                  </button>
+                </div>
+
+                <div style={{
+                  position: 'relative',
+                  width: '100%',
+                  maxHeight: '220px',
+                  borderRadius: '12px',
+                  overflow: 'hidden',
+                  background: '#000',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  marginBottom: '12px',
+                }}>
+                  <img
+                    src={previewUrl}
+                    alt="Evidence Preview"
+                    style={{ maxWidth: '100%', maxHeight: '220px', objectFit: 'contain' }}
+                  />
+                </div>
+
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '12px', color: '#558B2F' }}>
+                  <span style={{ fontWeight: '600', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '200px' }}>
+                    {form.evidence?.name}
+                  </span>
+                  <span>{formatFileSize(form.evidence?.size)}</span>
+                </div>
+
+                <div style={{ display: 'flex', gap: '8px', marginTop: '12px' }}>
+                  <button
+                    type="button"
+                    onClick={() => cameraInputRef.current?.click()}
+                    style={{
+                      flex: 1,
+                      padding: '8px 12px',
+                      borderRadius: '10px',
+                      border: '1px solid #A5D6A7',
+                      background: 'white',
+                      color: '#2E7D32',
+                      fontSize: '12px',
+                      fontWeight: '600',
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '6px',
+                    }}
+                  >
+                    <Camera size={14} /> Retake Photo
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => galleryInputRef.current?.click()}
+                    style={{
+                      flex: 1,
+                      padding: '8px 12px',
+                      borderRadius: '10px',
+                      border: '1px solid #A5D6A7',
+                      background: 'white',
+                      color: '#2E7D32',
+                      fontSize: '12px',
+                      fontWeight: '600',
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '6px',
+                    }}
+                  >
+                    <ImageIcon size={14} /> Choose Different
+                  </button>
+                </div>
               </div>
-              <p style={{ fontSize: '15px', fontWeight: '700', color: '#1A2B3C', margin: '0 0 4px 0' }}>
-                Upload Evidence
-              </p>
-              <p style={{ fontSize: '12px', color: '#8896A5', margin: '0 0 12px 0' }}>
-                Tap to upload screenshots, chat logs, or receipts
-              </p>
-              <span style={{
-                background: '#FFF5F5', color: '#E53935',
-                fontSize: '12px', fontWeight: '600',
-                padding: '6px 16px', borderRadius: '20px',
-                border: '1px solid rgba(229,57,53,0.2)',
-              }}>
-                Choose Files
-              </span>
-            </div>
+            ) : (
+              <div
+                style={{
+                  border: '2px dashed #E0E4EC',
+                  borderRadius: '16px',
+                  padding: '28px 20px',
+                  textAlign: 'center',
+                  background: '#FAFBFC',
+                  marginBottom: '20px',
+                  transition: 'all 0.2s ease',
+                  cursor: 'pointer',
+                }}
+                onClick={() => galleryInputRef.current?.click()}
+              >
+                <div style={{
+                  width: '60px', height: '60px',
+                  background: 'linear-gradient(135deg, #E53935, #C62828)',
+                  borderRadius: '16px',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  margin: '0 auto 12px',
+                }}>
+                  <Camera size={28} color="white" />
+                </div>
+                <p style={{ fontSize: '15px', fontWeight: '700', color: '#1A2B3C', margin: '0 0 4px 0' }}>
+                  Upload Evidence
+                </p>
+                <p style={{ fontSize: '12px', color: '#8896A5', margin: '0 0 16px 0' }}>
+                  Capture a photo or select screenshots/chat logs
+                </p>
+
+                <div style={{ display: 'flex', gap: '10px', justifyContent: 'center' }}>
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      cameraInputRef.current?.click();
+                    }}
+                    style={{
+                      background: '#FFF5F5',
+                      color: '#E53935',
+                      fontSize: '13px',
+                      fontWeight: '600',
+                      padding: '10px 16px',
+                      borderRadius: '12px',
+                      border: '1.5px solid rgba(229,57,53,0.3)',
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '6px',
+                      boxShadow: '0 2px 6px rgba(229,57,53,0.08)',
+                    }}
+                  >
+                    <Camera size={16} /> Take Photo
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      galleryInputRef.current?.click();
+                    }}
+                    style={{
+                      background: '#E53935',
+                      color: 'white',
+                      fontSize: '13px',
+                      fontWeight: '600',
+                      padding: '10px 16px',
+                      borderRadius: '12px',
+                      border: 'none',
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '6px',
+                      boxShadow: '0 2px 6px rgba(229,57,53,0.25)',
+                    }}
+                  >
+                    <Upload size={16} /> Choose Files
+                  </button>
+                </div>
+              </div>
+            )}
 
             {/* Review Summary */}
             <div style={{
@@ -375,6 +599,7 @@ export default function ReportScam() {
                 { label: 'Scam Type', value: form.scamType || 'Not selected' },
                 { label: 'Amount Lost', value: form.amount ? `₦${parseInt(form.amount).toLocaleString()}` : 'Not specified' },
                 { label: 'Anonymous', value: form.anonymous ? 'Yes' : 'No' },
+                { label: 'Evidence', value: form.evidence ? `📎 Attached (${formatFileSize(form.evidence.size)})` : 'None (Optional)' },
               ].map(item => (
                 <div key={item.label} style={{
                   display: 'flex', justifyContent: 'space-between',
@@ -404,11 +629,11 @@ export default function ReportScam() {
 
         {/* Navigation Buttons */}
         {error && (
-          <div style={{ background: '#FFF5F5', border: '1px solid #FFCDD2', borderRadius: '10px', padding: '12px', fontSize: '13px', color: '#C62828', marginBottom: '12px', textAlign: 'center' }}>
+          <div style={{ background: '#FFF5F5', border: '1px solid #FFCDD2', borderRadius: '10px', padding: '12px', fontSize: '13px', color: '#C62828', marginBottom: '16px', textAlign: 'center' }}>
             ⚠️ {error}
           </div>
         )}
-        <div style={{ display: 'flex', gap: '12px' }}>
+        <div style={{ display: 'flex', gap: '12px', marginTop: '8px', marginBottom: '24px' }}>
           {step > 1 && (
             <button
               type="button"
@@ -439,6 +664,7 @@ export default function ReportScam() {
             ) : step < 3 ? `Continue →` : '🚀 Submit Report'}
           </button>
         </div>
+        <div style={{ height: '30px' }} />
       </div>
     </div>
   );

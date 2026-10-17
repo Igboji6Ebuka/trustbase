@@ -1,0 +1,10 @@
+{
+  "appId": "ng.trustbase.app",
+  "appName": "TrustBase",
+  "webDir": "dist",
+  "bundledWebRuntime": false,
+  "server": {
+    "androidScheme": "https",
+    "cleartext": true
+  }
+}

@@ -202,7 +202,13 @@ export default function More() {
         <MenuSection title="Discover">
           <MenuItem icon={Info} iconBg="#EEF2FF" title="How TrustBase Works" subtitle="Learn about our verification system" />
           <MenuItem icon={ShieldCheck} iconBg="#F0FFF4" title="Safety Tips" subtitle="Avoid online scams in Nigeria" />
-          <MenuItem icon={HelpCircle} iconBg="#FFF8F0" title="Frequently Asked Questions" subtitle="Get help quickly" />
+          <MenuItem 
+            icon={HelpCircle} 
+            iconBg="#FFF8F0" 
+            title="Frequently Asked Questions" 
+            subtitle="Get help quickly" 
+            onClick={() => navigate('/faq')}
+          />
           <MenuItem icon={Headphones} iconBg="#EEF2FF" title="Contact Support" subtitle="We respond within 2 hours" badge="24/7" />
         </MenuSection>
 
